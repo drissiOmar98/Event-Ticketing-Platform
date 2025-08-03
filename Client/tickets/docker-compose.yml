@@ -1,0 +1,48 @@
+services:
+  postgresql:
+    container_name: tickets_sql
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: omar
+      POSTGRES_PASSWORD: omar
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - microservices-net
+    restart: unless-stopped
+
+   # Database management interface
+  adminer:
+    image: adminer:latest
+    restart: always
+    ports:
+      - 8888:8080
+
+  keycloak:
+    container_name: keycloak-ticket
+    image: quay.io/keycloak/keycloak:24.0.2
+    ports:
+      - 9098:8080
+    volumes:
+      - ./keycloak-realm-config:/opt/keycloak/data/import
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    networks:
+      - microservices-net
+    command:
+      - "start-dev"
+      - "--import-realm"
+
+
+
+
+networks:
+  microservices-net:
+    driver: bridge
+
+volumes:
+  postgres:

@@ -19,6 +19,19 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
 
     Optional<Event> findByIdAndOrganizerId(UUID id, UUID organizerId);
 
+    Page<Event> findByStatus(EventStatusEnum status, Pageable pageable);
 
+    @Query(value = "SELECT * FROM events WHERE " +
+            "status = 'PUBLISHED' AND " +
+            "to_tsvector('english', COALESCE(name, '') || ' ' || COALESCE(venue, '')) " +
+            "@@ plainto_tsquery('english', :searchTerm)",
+            countQuery = "SELECT count(*) FROM events WHERE " +
+                    "status = 'PUBLISHED' AND " +
+                    "to_tsvector('english', COALESCE(name, '') || ' ' || COALESCE(venue, '')) " +
+                    "@@ plainto_tsquery('english', :searchTerm)",
+            nativeQuery = true)
+    Page<Event> searchEvents(@Param("searchTerm") String searchTerm, Pageable pageable);
+
+    Optional<Event> findByIdAndStatus(UUID id, EventStatusEnum status);
 
 }

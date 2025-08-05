@@ -19,24 +19,6 @@ import java.util.List;
 public class GlobalExceptionHandler {
 
 
-    @ExceptionHandler(TicketNotFoundException.class)
-    public ResponseEntity<ErrorDto> handleTicketNotFoundException(TicketNotFoundException ex) {
-        log.error("Caught TicketNotFoundException", ex);
-        ErrorDto errorDto = new ErrorDto();
-        errorDto.setError("Ticket not found");
-        return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
-    }
-
-
-
-    @ExceptionHandler(TicketsSoldOutException.class)
-    public ResponseEntity<ErrorDto> handleTicketsSoldOutException(TicketsSoldOutException ex) {
-        log.error("Caught TicketsSoldOutException", ex);
-        ErrorDto errorDto = new ErrorDto();
-        errorDto.setError("Tickets are sold out for this ticket type");
-        return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
-    }
-
     @ExceptionHandler(QrCodeNotFoundException.class)
     public ResponseEntity<ErrorDto> handleQrCodeNotFoundException(QrCodeNotFoundException ex) {
         log.error("Caught QrCodeNotFoundException", ex);

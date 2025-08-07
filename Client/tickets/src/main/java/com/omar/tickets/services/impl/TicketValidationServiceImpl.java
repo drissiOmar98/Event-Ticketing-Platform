@@ -53,5 +53,10 @@ public class TicketValidationServiceImpl implements TicketValidationService {
     return ticketValidationRepository.save(ticketValidation);
   }
 
-
+  @Override
+  public TicketValidation validateTicketManually(UUID ticketId) {
+    Ticket ticket = ticketRepository.findById(ticketId)
+        .orElseThrow(TicketNotFoundException::new);
+    return validateTicket(ticket, TicketValidationMethod.MANUAL);
+  }
 }
